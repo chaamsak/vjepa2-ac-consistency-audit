@@ -13,13 +13,19 @@ A pilot audit of Meta's released V-JEPA 2-AC action-conditioned world model ([fa
 | 5. Direction | The planner's energy points at the true action direction; a training-free controllability weighting is compared with the official uniform cost |
 | 6. Action position (3 steps) | The same action placed at step 1, 2 or 3, with and without pose updates |
 | 7. Action position (6 steps) | The same action placed at each step of a 6-step rollout |
+| 8. Robustness | Test 7 repeated for three other directions and a different start frame, plus step 2 fed a real frame instead of an imagined one |
 
 All distances use the planner's own energy: mean absolute difference between layer-normalised latents.
 
 ## Key observations (pilot)
 
-1. **The action at rollout step 2 is almost ignored, and only that step.** Placing the same action at each step of a 6-step rollout changes the final latent by 0.17 to 0.24 at steps 1 and 3 to 6, but by only 0.011 to 0.019 at step 2 (6 to 8% of the step-1 effect). Freezing pose updates does not change this, and steps 3 to 6 also run on imagined frames yet behave normally. This one effect explains the two-step results: d((a,0),(0,a)) / d((a,0),(0,0)) and d((a,-a),(0,0)) / d((a,0),(0,0)) both equal 1.000, and splitting the true action into two steps loses about 64% of its error reduction. Since the official planner optimises two-step action sequences, its second action is effectively not optimised.
-   *Hypothesis (untested):* in `app/vjepa_droid/train.py`, step 2 is the only position that also receives the autoregressive rollout loss (`auto_steps: 2` in `configs/train/vitg16/droid-256px-8f.yaml`), so it is trained differently from every other position.
+1. **The action at rollout step 2 is almost ignored, and only that step.**
+   - **The effect:** placing the same action at each step of a 6-step rollout changes the final latent by 0.17 to 0.24 at steps 1 and 3 to 6, but by only 0.011 to 0.019 at step 2 (6 to 8% of the step-1 effect).
+   - **It is robust:** it holds for four action directions (step 2 at 3 to 6% of step 1), for two different real start frames, and with pose updates frozen.
+   - **It is not about imagined inputs:** when step 2 is given the real next frame instead of an imagined one, the action's effect drops further, to 0.6% of step 1 (0.0011 vs 0.177). Steps 3 to 6 run on imagined frames and behave normally.
+   - **It explains the two-step results:** d((a,0),(0,a)) / d((a,0),(0,0)) and d((a,-a),(0,0)) / d((a,0),(0,0)) both equal 1.000, and splitting the true action into two steps loses about 64% of its error reduction.
+   - **Impact:** the paper's robot experiments plan one action at a time, so its reported results are not affected. However, the repo's default planning settings use two-step action sequences, and any planning horizon above 1 would leave the second action effectively unoptimised.
+   - **Cause (open):** in `app/vjepa_droid/train.py`, step 2 is the only position that also receives the autoregressive rollout loss (`auto_steps: 2` in `configs/train/vitg16/droid-256px-8f.yaml`), which makes it a candidate. Test 8 rules out the simple version of this idea (deaf only on imagined inputs), so retraining a small predictor with `auto_steps` set to 1, 2 and 3 is needed to test it properly.
 2. Action sensitivity is monotone but saturating: 4x the action gives 1.6x the effect, and the energy basin along the true direction is nearly flat between 1.0x and 1.75x the true magnitude.
 3. Over 97 candidate directions of the true magnitude, the minimum-energy direction is 33.7 degrees from the true one (true direction ranked 4th). Controllability weighting raised energy contrast from 2.07σ to 2.27σ without changing the ranking.
 
@@ -42,7 +48,7 @@ Effect = distance between the final predicted latent and the all-zero-action rol
 
 ```
 vjepa2_ac_consistency_audit.ipynb   executed notebook with all outputs
-results/audit_results.json          every number reported, tests 1 to 7
+results/audit_results.json          every number reported, tests 1 to 8
 figures/                            the plots from each test
 ```
 
@@ -54,4 +60,4 @@ Note: at the time of writing, `src/hub/backbones.py` in the official repo points
 
 ## Limits
 
-One scene, one transition, translation-only actions, no gripper change. These are pilot results. The next step is a few hundred DROID transitions with confidence intervals.
+One robot scene (two real frames), translation-only actions, no gripper change. These are pilot results. The next step is a few hundred DROID transitions with confidence intervals.
