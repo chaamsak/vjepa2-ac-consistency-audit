@@ -1,0 +1,182 @@
+{
+ "reference": {
+  "real change d(z0, h1)": 0.5546117424964905,
+  "error (true action)": 0.42579564452171326,
+  "error (true action, translation only)": 0.4250819683074951,
+  "error (zero action)": 0.4800819754600525,
+  "floor d(pred(zero), z0)": 0.26723259687423706
+ },
+ "test1": {
+  "best_scale_on_true_direction (ideal 1.0)": 1.25,
+  "energy_by_scale": {
+   "0.00": 0.4800820052623749,
+   "0.25": 0.4627799987792969,
+   "0.50": 0.4544326663017273,
+   "0.75": 0.44002828001976013,
+   "1.00": 0.4250819683074951,
+   "1.25": 0.4212384819984436,
+   "1.50": 0.42398419976234436,
+   "1.75": 0.4247526526451111,
+   "2.00": 0.4295005798339844
+  },
+  "share_of_directions_with_monotone_sensitivity": 1.0,
+  "mean_sensitivity_by_size": {
+   "0.025": 0.12762297902788436,
+   "0.05": 0.17026206638131822,
+   "0.075": 0.1917888926608222,
+   "0.1": 0.20887199895722525
+  }
+ },
+ "test2": {
+  "relative_gap_by_K_and_size": {
+   "K=2": {
+    "0.025": 0.6522670641329091,
+    "0.05": 0.6477717154922891,
+    "0.075": 0.6677293580154974,
+    "0.1": 0.6962714509589208
+   },
+   "K=4": {
+    "0.025": 0.813452617761128,
+    "0.05": 0.6953898632768316,
+    "0.075": 0.6732069453166838,
+    "0.1": 0.6630656884191557
+   }
+  },
+  "zero_action_drift_by_K": {
+   "K=2": 0.030087582767009735,
+   "K=4": 0.08439990878105164
+  },
+  "distance_to_real_next_frame_by_steps": {
+   "1": 0.4250819683074951,
+   "2": 0.45995864272117615,
+   "4": 0.4457958936691284,
+   "8": 0.46277281641960144
+  }
+ },
+ "test3": {
+  "split_vs_front": {
+   "0.025": 0.5173994500297288,
+   "0.05": 0.553961509134164,
+   "0.075": 0.5855482194534735,
+   "0.1": 0.6322326351505803
+  },
+  "front_vs_back": {
+   "0.025": 0.9999649170355668,
+   "0.05": 0.9999276783226528,
+   "0.075": 0.9998673939583723,
+   "0.1": 0.9998232577150811
+  },
+  "order_x_z": {
+   "0.025": 0.8176153308020541,
+   "0.05": 0.8765874076640674,
+   "0.075": 0.7877243936363099,
+   "0.1": 0.7613665673629
+  }
+ },
+ "test4": {
+  "reversal_gap_by_size": {
+   "0.025": 0.999969181782628,
+   "0.05": 0.9999339038494737,
+   "0.075": 0.9998955500161797,
+   "0.1": 1.000554090978287
+  }
+ },
+ "test5": {
+  "uniform_cost": {
+   "angle_to_true_deg": 33.746775664921245,
+   "rank_of_true_direction": 4,
+   "contrast_sigma": 2.071394443511963
+  },
+  "controllability_weighted_cost": {
+   "angle_to_true_deg": 33.746775664921245,
+   "rank_of_true_direction": 4,
+   "contrast_sigma": 2.270353078842163
+  },
+  "n_candidates": 97,
+  "share_of_weight_on_top_10pct_patches": 0.16581511497497559
+ },
+ "spatial": {
+  "corr(action effect, splitting gap)": 0.7822787135517836,
+  "corr(action effect, reversal gap)": 0.9995271493994459
+ },
+ "meta": {
+  "smoke_test": false,
+  "device": "cuda",
+  "sizes_m": [
+   0.025,
+   0.05,
+   0.075,
+   0.1
+  ],
+  "directions": [
+   "+x",
+   "-x",
+   "+y",
+   "-y",
+   "+z",
+   "-z",
+   "true dir"
+  ],
+  "checkpoint": "https://dl.fbaipublicfiles.com/vjepa2/vjepa2-ac-vitg.pt"
+ },
+ "test6_last_action": {
+  "freeze_pose=False, size=0.025": {
+   "action at step 1": 0.13774120807647705,
+   "action at step 2": 0.0038644808810204268,
+   "action at step 3 (last)": 0.13572362065315247
+  },
+  "freeze_pose=False, size=0.05": {
+   "action at step 1": 0.17695176601409912,
+   "action at step 2": 0.007551408838480711,
+   "action at step 3 (last)": 0.1781984269618988
+  },
+  "freeze_pose=False, size=0.075": {
+   "action at step 1": 0.20044417679309845,
+   "action at step 2": 0.011013785377144814,
+   "action at step 3 (last)": 0.2028527706861496
+  },
+  "freeze_pose=False, size=0.1": {
+   "action at step 1": 0.22545665502548218,
+   "action at step 2": 0.014225277118384838,
+   "action at step 3 (last)": 0.2200482338666916
+  },
+  "freeze_pose=True, size=0.025": {
+   "action at step 1": 0.13751186430454254,
+   "action at step 2": 0.002944918582215905,
+   "action at step 3 (last)": 0.13572362065315247
+  },
+  "freeze_pose=True, size=0.05": {
+   "action at step 1": 0.17652517557144165,
+   "action at step 2": 0.00570759316906333,
+   "action at step 3 (last)": 0.1781984269618988
+  },
+  "freeze_pose=True, size=0.075": {
+   "action at step 1": 0.19995588064193726,
+   "action at step 2": 0.008219285868108273,
+   "action at step 3 (last)": 0.2028527706861496
+  },
+  "freeze_pose=True, size=0.1": {
+   "action at step 1": 0.2248413860797882,
+   "action at step 2": 0.010463560000061989,
+   "action at step 3 (last)": 0.2200482338666916
+  }
+ },
+ "test7_position_sweep": {
+  "size=0.05": {
+   "action at step 1": 0.17980560660362244,
+   "action at step 2": 0.011219295673072338,
+   "action at step 3": 0.18049557507038116,
+   "action at step 4": 0.178527370095253,
+   "action at step 5": 0.1749245971441269,
+   "action at step 6": 0.1711069792509079
+  },
+  "size=0.1": {
+   "action at step 1": 0.2415177822113037,
+   "action at step 2": 0.019142840057611465,
+   "action at step 3": 0.24038219451904297,
+   "action at step 4": 0.2346298098564148,
+   "action at step 5": 0.2282240241765976,
+   "action at step 6": 0.2173188179731369
+  }
+ }
+}
